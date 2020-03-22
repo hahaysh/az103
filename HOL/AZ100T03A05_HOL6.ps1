@@ -1,35 +1,35 @@
-#¸ÕÀú ·Î±×ÀÎ
+#ë¨¼ì € ë¡œê·¸ì¸
 Connect-AzAccount
 
-#VME¸ñ·Ï
+#VMEëª©ë¡
 Get-AzVmImagePublisher -Location "EastUS2" | `
 Get-AzVMExtensionImageType | `
 Get-AzVMExtensionImage | Select Type, Version
 
-#VME°ü·Ã CommandÈ®ÀÎ
+#VMEê´€ë ¨ Commandí™•ì¸
 Get-Command Set-Az*Extension* -Module Az.Compute
 
-#VM¿¡ VME¿¡ÀÌÀüÆ®°¡ ¼³Ä¡µÇ¾î ÀÖ´ÂÁö È®ÀÎ
+#VMì— VMEì—ì´ì „íŠ¸ê°€ ì„¤ì¹˜ë˜ì–´ ìˆëŠ”ì§€ í™•ì¸
 $vms = Get-AzVM
 foreach ($vm in $vms) {
     $agent = $vm | Select -ExpandProperty OSProfile | Select -ExpandProperty Windowsconfiguration | Select ProvisionVMAgent
     Write-Host $vm.Name $agent.ProvisionVMAgent
 }
 
-#¸®¼Ò½º±×·ì°ú °¡»ó¸Ó½ÅÀÌ¸§ Á¤ÀÇ
+#ë¦¬ì†ŒìŠ¤ê·¸ë£¹ê³¼ ê°€ìƒë¨¸ì‹ ì´ë¦„ ì •ì˜
 $ResourceName = "hahaysh-rg2"
 $vmName = "hahaysh-vm2"
 
-#CustomScriptExtension À» ÀÌ¿ëÇØ Github¿¡¼­ ÆÄ¿ö¼¿ ½ºÅ©¸³Æ®¸¦ ´Ù¿î ¹Ş¾Æ¼­ ½ÇÇà - ÇØ´ç ÆÄÀÏÀ» Á÷Á¢ Á¢±ÙÇØ¼­ ¹«½¼ÀÏÀ» ÇÏ´ÂÁö È®ÀÎÇØº»´Ù.
-#¹Ì¸® ¿ø°İ¼­¹ö¿¡ Á¢¼ÓÇØ¼­ ÆÄÀÏÀÌ ¸¸µé¾îÁö´ÂÁö ÁöÄÑº»´Ù.
+#CustomScriptExtension ì„ ì´ìš©í•´ Githubì—ì„œ íŒŒì›Œì…€ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ë‹¤ìš´ ë°›ì•„ì„œ ì‹¤í–‰ - í•´ë‹¹ íŒŒì¼ì„ ì§ì ‘ ì ‘ê·¼í•´ì„œ ë¬´ìŠ¨ì¼ì„ í•˜ëŠ”ì§€ í™•ì¸í•´ë³¸ë‹¤.
+#ë¯¸ë¦¬ ì›ê²©ì„œë²„ì— ì ‘ì†í•´ì„œ íŒŒì¼ì´ ë§Œë“¤ì–´ì§€ëŠ”ì§€ ì§€ì¼œë³¸ë‹¤.
 
-#IIS±¸¼º - ¿ø°İÆÄÀÏÀ» ÅëÇØ¼­ 
+#IISêµ¬ì„± - ì›ê²©íŒŒì¼ì„ í†µí•´ì„œ 
 #Set-AzVMCustomScriptExtension -ResourceGroupName $ResourceName `
 #    -VMName $vmName -Name "myScript" `
 #    -FileUri "https://raw.githubusercontent.com/neilpeterson/nepeters-azure-templates/master/windows-custom-script-simple/support-scripts/Create-File.ps1" `
 #    -Run "Create-File.ps1" -Location "East US2"
 
-#IIS±¸¼º
+#IISêµ¬ì„±
 #  Uninstall-WindowsFeature -Name Web-Server 
 Set-AzVMExtension -ResourceGroupName $ResourceName `
     -ExtensionName "myScript" `
@@ -40,18 +40,20 @@ Set-AzVMExtension -ResourceGroupName $ResourceName `
     -TypeHandlerVersion 1.8 `
     -SettingString '{"commandToExecute":"powershell Add-WindowsFeature Web-Server; powershell Add-Content -Path \"C:\\inetpub\\wwwroot\\Default.htm\" -Value $($env:computername)"}'
 
-#VM¿¡ ¹èÆ÷µÈ VME ¸ñ·Ï ³ª¿­
+#VMì— ë°°í¬ëœ VME ëª©ë¡ ë‚˜ì—´
 $vm = Get-AzVM -ResourceGroupName $ResourceName -VMName $vmName
 $vm.Extensions | select Publisher, VirtualMachineExtensionType, TypeHandlerVersion
 
-#VME»óÅÂ º¸±â 
+#VMEìƒíƒœ ë³´ê¸° 
 Get-AzVM -ResourceGroupName $ResourceName -VMName $vmName -Status
 
-#VMEÁ¦°Å - Æ÷Å»¿¡¼­ ¸ÕÀú ¼³Ä¡µÈ °ÍÀ» È®ÀÎÇÑ ÈÄ¿¡ »èÁ¦(Æ÷Å»¿¡¼­´Â È®ÀÎÀÌ ´ÊÀ½)
-Remove-AzVMExtension -ResourceGroupName $ResourceName -VMName $vmName -Name "myScript¡°
+# VMì˜ ì›¹ì„œë²„ë¡œ ì ‘ê·¼í•´ì„œ í˜ì´ì§€ê°€ ëœ¨ëŠ”ì§€ í™•ì¸
+
+#VMEì œê±° - í¬íƒˆì—ì„œ ë¨¼ì € ì„¤ì¹˜ëœ ê²ƒì„ í™•ì¸í•œ í›„ì— ì‚­ì œ(í¬íƒˆì—ì„œëŠ” í™•ì¸ì´ ëŠ¦ìŒ)
+Remove-AzVMExtension -ResourceGroupName $ResourceName -VMName $vmName -Name "myScriptâ€œ
 
 ===========================================
-# PowerShell·Î VME±¸¼º(°£´Ü¹öÀü)
+# PowerShellë¡œ VMEêµ¬ì„±(ê°„ë‹¨ë²„ì „)
 Set-AzVMExtension -ResourceGroupName "myResourceGroupAutomate" `
     -ExtensionName "IIS" `
     -VMName "myVM" `

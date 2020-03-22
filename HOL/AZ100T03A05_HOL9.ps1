@@ -1,16 +1,16 @@
-# ¾Æ·¡ ½ºÅ©¸³Æ® ÁøÇàÀü¿¡ VM, ¸®¼Ò½º±×·ì ÀÌ »çÀü¿¡ ¸ğµÎ ÁØºñµÇ¾î ÀÖ¾î¾ß µÊ.(¸ğµÎ µ¿ÀÏÇÑ ¸®¼Ò½º ±×·ì¾È¿¡)
+# ì•„ë˜ ìŠ¤í¬ë¦½íŠ¸ ì§„í–‰ì „ì— VM, ë¦¬ì†ŒìŠ¤ê·¸ë£¹ ì´ ì‚¬ì „ì— ëª¨ë‘ ì¤€ë¹„ë˜ì–´ ìˆì–´ì•¼ ë¨.(ëª¨ë‘ ë™ì¼í•œ ë¦¬ì†ŒìŠ¤ ê·¸ë£¹ì•ˆì—)
 
 $resourceGroup = "hahaysh-rg2"
 $location = "EastUS2"
 $vmName = "hahaysh-vm2"
 $storageName = "hahayshsta2"
 
-# storage account¸¸µé±â
+# storage accountë§Œë“¤ê¸°
 $storageAccount = New-AzStorageAccount -ResourceGroupName $resourceGroup -Name $storageName -Location $location -SkuName "Standard_LRS"
 
-# storage account¿¡ DSC ÆÄÀÏ ¹èÆ÷
-# ps1ÆÄÀÏ ÀúÀåÇÑ À§Ä¡·Î ÀÌµ¿ : cd C:\CloudDrive\OneDrive\PowerShell 
+# storage accountì— DSC íŒŒì¼ ë°°í¬
+# ps1íŒŒì¼ ì €ì¥í•œ ìœ„ì¹˜ë¡œ ì´ë™ : cd C:\CloudDrive\OneDrive\PowerShell 
 Publish-AzVMDscConfiguration -ConfigurationPath .\iisInstall.ps1 -ResourceGroupName $resourceGroup -StorageAccountName $storageName -force
 
-# DSC¸¦ VM¿¡ Àû¿ë
-Set-AzVMDscExtension -Version '2.76' -ResourceGroupName $resourceGroup -VMName $vmName -ArchiveStorageAccountName $storageName -ArchiveBlobName 'iisInstall.ps1.zip' -AutoUpdate: $true -ConfigurationName 'IISInstall¡¯
+# DSCë¥¼ VMì— ì ìš©
+Set-AzVMDscExtension -Version '2.76' -ResourceGroupName $resourceGroup -VMName $vmName -ArchiveStorageAccountName $storageName -ArchiveBlobName 'iisInstall.ps1.zip' -AutoUpdate: $true -ConfigurationName 'IISInstallâ€™

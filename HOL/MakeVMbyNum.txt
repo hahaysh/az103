@@ -7,6 +7,9 @@ $AdminPWD = "P@ssw0rd1234"
 $Location = "East US2"
 $VMSize = "Standard_DS2"
 
+# VMSize오류시에는 아래 구문으로 현재 region에서 사용가능한 VMSzie조회
+#Get-AzureRmVMSize -Location $Location
+
 # 아래는 손대지 말것
 $AdminPWD = ConvertTo-SecureString $AdminPWD -AsPlainText -Force
 $VMName = $AdminID+"vm"+$mynum

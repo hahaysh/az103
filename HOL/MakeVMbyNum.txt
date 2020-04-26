@@ -1,0 +1,21 @@
+# 벌크 VM을 만드는 스크립트 샘플
+
+# 매개변수정리 - 막만들때는 맨위에 번호만 수정할 것
+$mynum = "03"
+$AdminID = "hahaysh"
+$AdminPWD = "P@ssw0rd1234"
+$Location = "East US2"
+$VMSize = "Standard_DS2"
+
+# 아래는 손대지 말것
+$AdminPWD = ConvertTo-SecureString $AdminPWD -AsPlainText -Force
+$VMName = $AdminID+"vm"+$mynum
+$ResourceGroupName = $AdminID+"rg"+$mynum
+$VirtualNetworkName = $AdminID+"vnet"+$mynum
+$SubnetName = $AdminID+"subnet"+$mynum
+$SecurityGroupName = $AdminID+"nsg"+$mynum
+$PublicIpAddressName = $AdminID+"pubip"+$mynum
+$Credential = New-Object System.Management.Automation.PSCredential ($AdminID, $AdminPWD);
+
+# VM만들기
+New-AzVm -Name $VMName -ResourceGroupName $ResourceGroupName -Location $Location -VirtualNetworkName $VirtualNetworkName -SubnetName $SubnetName -SecurityGroupName $SecurityGroupName -PublicIpAddressName  $PublicIpAddressName -Size $VMSize -Credential $Credential -OpenPorts 80,3389
